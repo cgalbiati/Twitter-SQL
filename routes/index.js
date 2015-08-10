@@ -1,7 +1,5 @@
 //var tweetBank = require('../tweetBank');
-var userTable = require('../models/index').User;
-var tweetTable = require('../models/index').Tweet;
-console.dir(userTable);
+
 
 module.exports = function (io) {
 	var router = require('express').Router();
