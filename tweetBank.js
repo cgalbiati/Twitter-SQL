@@ -17,11 +17,14 @@ User.findOrCreate({where: {name: name}, defaults: {pictureUrl: 'https://s-media-
 // addUser("Chandra", "http://www.fullstackacademy.com/img/team/nimit_maru@2x_nerd.jpg");
 
 var addTweet = function (name, tweet) {
-   User.findOrCreate({where: {name: name}, defaults: {pictureUrl: 'https://s-media-cache-ak0.pinimg.com/236x/7f/75/6b/7f756bcb3481db56650768cc5fc0cf50.jpg'}
-   }).spread(function(user, created){
-      return user.id;
-  }).then(function(userid) {
-    Tweet.create({id: null, UserId: userid, tweet: tweet});
+  var userMemo;
+  return User.findOrCreate({where: {name: name}, defaults: {pictureUrl: 'https://s-media-cache-ak0.pinimg.com/236x/7f/75/6b/7f756bcb3481db56650768cc5fc0cf50.jpg'}
+   }).spread(function(user){
+     userMemo = user;
+     return Tweet.create({id: null, UserId: user.id, tweet: tweet});
+  }).then(function(theTweet) {
+    var obj = {username: userMemo.name, picture: userMemo.pictureUrl, tweet: theTweet.tweet};
+    return obj;
   }).catch(errorCatch);
 };
 
@@ -53,17 +56,17 @@ var findUser = function (username) {
           var obj = {username: elem.User.name, picture: elem.User.pictureUrl, tweet: elem.tweet};
           return obj;
         });
-    });
+    }).catch(errorCatch);
 };
 
 var findTweet = function (tweetID) {
     Tweet.findById(tweetID, {include: User})
     .then(function(t){
         return {username: t.User.name, picture: t.User.pictureUrl, tweet: t.tweet};
-    });
+    }).catch(errorCatch);
 };
 
-findTweet(1);
+// findTweet(1);
 //console.log(findTweet(1));
 module.exports = {
   addUser: addUser,

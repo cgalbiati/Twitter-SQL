@@ -41,9 +41,11 @@ module.exports = function (io) {
 	});
 
 	router.post('/submit', function (req, res) {
-	// 	tweetBank.add(req.body.shenanigans, req.body.text);
-	// 	var theNewTweet = tweetBank.list().pop();
-	// 	io.sockets.emit('new_tweet', theNewTweet);
+		// console.log(req.body.shenanigans, req.body.text);
+		tweetBank.addTweet(req.body.shenanigans, req.body.text)
+		.then(function(theTweet) {
+			io.sockets.emit('new_tweet', theTweet);
+		})
 	// 	res.redirect('/');
 	});
 	return router;
